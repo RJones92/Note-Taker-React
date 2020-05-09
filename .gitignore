@@ -3,6 +3,7 @@ npm-debug.log*
 /*.env
 .vscode/*
 
+# REACT .gitgnore
 # dependencies
 /node_modules
 /.pnp

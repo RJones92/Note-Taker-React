@@ -19,6 +19,7 @@ function CreateArea(props) {
 
   function submitNote(event) {
     props.onAdd(note);
+    //Reset the notetaking area to blank
     setNote({ title: "", content: "" });
     setExpandArea(false);
     event.preventDefault();

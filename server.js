@@ -1,9 +1,17 @@
 //jshint esversion:6
 
 const express = require("express");
+const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const app = express();
+
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  }),
+  bodyParser.json()
+);
 
 //---------------------------MONGOOSE SETUP--------------------------------
 mongoose.connect("mongodb://localhost:27017/notesDB", {
@@ -46,11 +54,22 @@ app.get("/dataItems", function (req, res) {
       res.send(notes);
     }
   });
-  // res.send({ express: "check it out" });
+});
+
+app.post("/dataItems", function (req, res) {
+  console.log(req.body);
+
+  const newTitle = req.body.title;
+  const newContent = req.body.content;
+  const newNote = new Note({
+    title: newTitle,
+    content: newContent,
+  });
+  newNote.save();
+  res.send(newNote);
 });
 
 //Start the server listening on port 5000
-
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 5000;

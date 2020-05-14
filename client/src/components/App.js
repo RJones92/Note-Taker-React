@@ -24,7 +24,7 @@ function App() {
     function addNotes(notesFromDB) {
       console.log("Adding notes...");
       notesFromDB.map((note) => {
-        return addNote(note);
+        return renderNotes(note);
       });
     }
   }, []);
@@ -42,7 +42,25 @@ function App() {
     return body;
   }
 
+  //Adds a note to DB
   function addNote(note) {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: note.title,
+        content: note.content,
+      }),
+    };
+
+    fetch("/dataItems", requestOptions)
+      .then((res) => res.json())
+      //using the JSON response we'll now add the note to the Array
+      .then((newNote) => renderNotes(newNote));
+  }
+
+  //Adds a note to notes array
+  function renderNotes(note) {
     setNotes((prevValue) => {
       return [...prevValue, { noteTitle: note.title, noteBody: note.content }];
     });

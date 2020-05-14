@@ -3,30 +3,43 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
-import exampleNotes from "../notes";
+// import exampleNotes from "../notes";
 
 function App() {
-  const [serverBody, setServerBody] = useState(null);
-  const [notes, setNotes] = useState(exampleNotes);
+  const [notes, setNotes] = useState([]);
 
-  //When the React App componenet is mounted or updated, this function executes
+  //When the React App component is mounted or updated, this function executes
   useEffect(() => {
+    console.log("useEffect has been called");
+
     callBackEndAPI()
-      .then((res) => setServerBody(res.express))
-      .catch((err) => console.log(err));
-  });
+      .then((res) => {
+        addNotes(res);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    function addNotes(notesFromDB) {
+      console.log("Adding notes...");
+      notesFromDB.map((note) => {
+        return addNote(note);
+      });
+    }
+  }, []);
 
   //Collects the data from the Express server, the route is defined in the proxy key-value pair in package.json
   async function callBackEndAPI() {
-    const response = await fetch("/express_backend");
+    console.log("callBackEndAPI has been called");
+    const response = await fetch("/dataItems");
     const body = await response.json();
-    console.log(response);
 
+    console.log("HTTP status code: " + response.status);
     if (response.status !== 200) {
       throw Error(body.message);
-    } else {
-      return body;
     }
+    return body;
   }
 
   function addNote(note) {
@@ -47,7 +60,6 @@ function App() {
     <div>
       <Header />
       <CreateArea onAdd={addNote} />
-      {/* Creates the notes */}
       {notes.map((note, index) => (
         <Note
           key={index}
@@ -57,7 +69,6 @@ function App() {
           onDelete={deleteNote}
         />
       ))}
-      <p>{serverBody}</p>
       <Footer />
     </div>
   );

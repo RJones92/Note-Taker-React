@@ -69,6 +69,17 @@ app.post("/dataItems", function (req, res) {
   res.send(newNote);
 });
 
+app.delete("/dataItems/:noteId/delete", function (req, res) {
+  console.log("Deleting note with DB ID " + req.params.noteId);
+
+  Note.deleteOne({ _id: req.params.noteId }, function (err) {
+    if (err) {
+      console.log(err);
+    }
+  });
+  res.send(req.params);
+});
+
 //Start the server listening on port 5000
 let port = process.env.PORT;
 if (port == null || port == "") {

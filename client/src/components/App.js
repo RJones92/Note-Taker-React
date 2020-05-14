@@ -10,12 +10,9 @@ function App() {
 
   //When the React App component is mounted or updated, this function executes
   useEffect(() => {
-    console.log("useEffect has been called");
-
     callBackEndAPI()
       .then((res) => {
         addNotes(res);
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -31,11 +28,10 @@ function App() {
 
   //Collects the data from the Express server, the route is defined in the proxy key-value pair in package.json
   async function callBackEndAPI() {
-    console.log("callBackEndAPI has been called");
     const response = await fetch("/dataItems");
     const body = await response.json();
 
-    console.log("HTTP status code: " + response.status);
+    console.log("Status code from DB: " + response.status);
     if (response.status !== 200) {
       throw Error(body.message);
     }
@@ -62,16 +58,28 @@ function App() {
   //Adds a note to notes array
   function renderNotes(note) {
     setNotes((prevValue) => {
-      return [...prevValue, { noteTitle: note.title, noteBody: note.content }];
+      return [
+        ...prevValue,
+        { id: note._id, noteTitle: note.title, noteBody: note.content },
+      ];
     });
   }
 
+  //Deletes a note from the DB and the notes array
   function deleteNote(id) {
-    setNotes((prevValue) => {
-      return prevValue.filter((value, index) => {
-        return index !== id;
+    const requestOptions = {
+      method: "DELETE",
+    };
+    fetch("/dataItems/" + id + "/delete", requestOptions)
+      .then((res) => res.json())
+      //using the JSON response we'll now delete the note from the Array
+      .then((deletedNote) => {
+        setNotes((prevValue) => {
+          return prevValue.filter((x) => {
+            return x.id !== deletedNote.noteId;
+          });
+        });
       });
-    });
   }
 
   return (
@@ -81,7 +89,7 @@ function App() {
       {notes.map((note, index) => (
         <Note
           key={index}
-          id={index}
+          id={note.id}
           noteTitle={note.noteTitle}
           noteBody={note.noteBody}
           onDelete={deleteNote}

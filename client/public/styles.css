@@ -36,8 +36,10 @@ footer {
 footer p {
   color: #ccc;
 }
+
+/* Note colour palette: https://coolors.co/ff99c8-fcf6bd-d0f4de-a9def9-e4c1f9 */
 .note {
-  background: #fff;
+  background: #fcf6bd;
   border-radius: 7px;
   box-shadow: 0 2px 5px #ccc;
   padding: 10px;
@@ -48,25 +50,19 @@ footer p {
 .note h1 {
   font-size: 1.1em;
   margin-bottom: 6px;
+  margin-left: 10px;
 }
 .note p {
   font-size: 1.1em;
   margin-bottom: 10px;
+  margin-left: 10px;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
-.note button {
+
+.note .button-group {
   position: relative;
   float: right;
-  margin-right: 10px;
-  color: #f5ba13;
-  border: none;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-  outline: none;
-  background-color: cornsilk;
-  border-radius: 50%;
 }
 
 form.create-note {

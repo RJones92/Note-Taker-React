@@ -1,14 +1,17 @@
 import React from "react";
-import DeleteIcon from "@material-ui/icons/Delete";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import EditButton from "./EditButton";
+import DeleteButton from "./DeleteButton";
 
 function Note(props) {
   return (
     <div className="note">
       <h1>{props.noteTitle}</h1>
       <p>{props.noteBody}</p>
-      <button onClick={() => props.onDelete(props.id)}>
-        <DeleteIcon />
-      </button>
+      <ButtonGroup disableElevation variant="" className="button-group">
+        <EditButton />
+        <DeleteButton onClick={() => props.onDelete(props.id)} />
+      </ButtonGroup>
     </div>
   );
 }

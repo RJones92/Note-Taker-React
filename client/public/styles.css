@@ -47,11 +47,19 @@ footer p {
   margin: 16px;
   float: left;
 }
+
 .note h1 {
   font-size: 1.1em;
   margin-bottom: 6px;
   margin-left: 10px;
 }
+
+/* Used for the RIEK component, when editing it becomes and <input> tag */
+.note input {
+  font-size: 1.1em;
+  width: 100%;
+}
+
 .note p {
   font-size: 1.1em;
   margin-bottom: 10px;

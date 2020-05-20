@@ -17,6 +17,7 @@ app.use(
 mongoose.connect("mongodb://localhost:27017/notesDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
 const noteSchema = new mongoose.Schema({
@@ -78,6 +79,30 @@ app.delete("/dataItems/:noteId/delete", function (req, res) {
     }
   });
   res.send(req.params);
+});
+
+app.put("/dataItems/:noteId/edit", function (req, res) {
+  console.log("app.put has been called");
+
+  const id = req.params.noteId;
+  var newTitle = req.body.title;
+  console.log("Updating note with DB ID " + id);
+  console.log("newTitle is " + newTitle);
+
+  const options = { new: true };
+
+  Note.findOneAndUpdate({ _id: id }, { title: newTitle }, options, function (
+    err,
+    response
+  ) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Note updated to...");
+      console.log(response);
+      res.send(response);
+    }
+  });
 });
 
 //Start the server listening on port 5000

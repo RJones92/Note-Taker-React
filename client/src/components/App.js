@@ -3,7 +3,6 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
-// import exampleNotes from "../notes";
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -21,7 +20,7 @@ function App() {
     function addNotes(notesFromDB) {
       console.log("Adding notes...");
       notesFromDB.map((note) => {
-        return renderNotes(note);
+        return addNoteToArray(note);
       });
     }
   }, []);
@@ -39,7 +38,7 @@ function App() {
   }
 
   //Adds a note to DB
-  function addNote(note) {
+  function addNotetoDB(note) {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -52,11 +51,11 @@ function App() {
     fetch("/dataItems", requestOptions)
       .then((res) => res.json())
       //using the JSON response we'll now add the note to the Array
-      .then((newNote) => renderNotes(newNote));
+      .then((newNote) => addNoteToArray(newNote));
   }
 
   //Adds a note to notes array
-  function renderNotes(note) {
+  function addNoteToArray(note) {
     setNotes((prevValue) => {
       return [
         ...prevValue,
@@ -65,18 +64,48 @@ function App() {
     });
   }
 
-  //Deletes a note from the DB and the notes array
-  function deleteNote(id) {
+  //Deletes a note from the DB
+  function deleteNoteFromDB(deletedNoteId) {
     const requestOptions = {
       method: "DELETE",
     };
-    fetch("/dataItems/" + id + "/delete", requestOptions)
+    fetch("/dataItems/" + deletedNoteId + "/delete", requestOptions)
       .then((res) => res.json())
       //using the JSON response we'll now delete the note from the Array
       .then((deletedNote) => {
+        deleteNoteFromArray(deletedNote.noteId);
+      });
+  }
+
+  //Deletes a note from the notes Array
+  function deleteNoteFromArray(deletedNoteId) {
+    setNotes((prevValue) => {
+      return prevValue.filter((x) => {
+        return x.id !== deletedNoteId;
+      });
+    });
+  }
+
+  //Updates note in DB and array
+  function editNote(id, newTitle) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: newTitle,
+      }),
+    };
+
+    //edit in the DB
+    fetch("/dataItems/" + id + "/edit", requestOptions)
+      .then((res) => res.json())
+      //using the JSON response we'll now update the note in the Array
+      .then((updatedNote) => {
         setNotes((prevValue) => {
-          return prevValue.filter((x) => {
-            return x.id !== deletedNote.noteId;
+          return notes.map((note) => {
+            return note.id === updatedNote._id
+              ? { ...note, noteTitle: newTitle }
+              : note;
           });
         });
       });
@@ -85,16 +114,19 @@ function App() {
   return (
     <div>
       <Header />
-      <CreateArea onAdd={addNote} />
-      {notes.map((note, index) => (
-        <Note
-          key={index}
-          id={note.id}
-          noteTitle={note.noteTitle}
-          noteBody={note.noteBody}
-          onDelete={deleteNote}
-        />
-      ))}
+      <CreateArea onAdd={addNotetoDB} />
+      {notes.map((note, index) => {
+        return (
+          <Note
+            key={index}
+            id={note.id}
+            noteTitle={note.noteTitle}
+            noteBody={note.noteBody}
+            onDelete={deleteNoteFromDB}
+            onEdit={editNote}
+          />
+        );
+      })}
       <Footer />
     </div>
   );

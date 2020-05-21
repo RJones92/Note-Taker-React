@@ -18,7 +18,6 @@ function App() {
       });
 
     function addNotes(notesFromDB) {
-      console.log("Adding notes...");
       notesFromDB.map((note) => {
         return addNoteToArray(note);
       });
@@ -87,12 +86,13 @@ function App() {
   }
 
   //Updates note in DB and array
-  function editNote(id, newTitle) {
+  function editNote(id, newTitle, newBody) {
     const requestOptions = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: newTitle,
+        content: newBody,
       }),
     };
 
@@ -101,10 +101,14 @@ function App() {
       .then((res) => res.json())
       //using the JSON response we'll now update the note in the Array
       .then((updatedNote) => {
-        setNotes((prevValue) => {
+        setNotes(() => {
           return notes.map((note) => {
             return note.id === updatedNote._id
-              ? { ...note, noteTitle: newTitle }
+              ? {
+                  ...note,
+                  noteTitle: updatedNote.title,
+                  noteBody: updatedNote.content,
+                }
               : note;
           });
         });

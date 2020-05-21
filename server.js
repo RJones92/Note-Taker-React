@@ -58,14 +58,14 @@ app.get("/dataItems", function (req, res) {
 });
 
 app.post("/dataItems", function (req, res) {
-  console.log(req.body);
-
   const newTitle = req.body.title;
   const newContent = req.body.content;
   const newNote = new Note({
     title: newTitle,
     content: newContent,
   });
+  console.log("Adding note ");
+  console.log(newNote);
   newNote.save();
   res.send(newNote);
 });
@@ -86,23 +86,27 @@ app.put("/dataItems/:noteId/edit", function (req, res) {
 
   const id = req.params.noteId;
   var newTitle = req.body.title;
+  var newBody = req.body.content;
   console.log("Updating note with DB ID " + id);
   console.log("newTitle is " + newTitle);
+  console.log("newBody is " + newBody);
 
   const options = { new: true };
 
-  Note.findOneAndUpdate({ _id: id }, { title: newTitle }, options, function (
-    err,
-    response
-  ) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("Note updated to...");
-      console.log(response);
-      res.send(response);
+  Note.findOneAndUpdate(
+    { _id: id },
+    { title: newTitle, content: newBody },
+    options,
+    function (err, response) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Note updated to...");
+        console.log(response);
+        res.send(response);
+      }
     }
-  });
+  );
 });
 
 //Start the server listening on port 5000

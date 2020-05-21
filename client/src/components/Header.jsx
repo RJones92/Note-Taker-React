@@ -6,7 +6,7 @@ function Header() {
     <header>
       <h1>
         <PostAddIcon style={{ fontSize: "inherit" }} />
-        Note Taker App
+        Note Taker
       </h1>
     </header>
   );

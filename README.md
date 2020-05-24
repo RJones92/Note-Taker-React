@@ -2,6 +2,7 @@
 A webapp for taking notes, made with ReactJS
 
 ------Starting the app------
+
 In a non-production environment, you will need to spin up the React server (configured on localhost:3000) and the Express server (configured on localhost:5000):
 1. Navigate to the working directory (Note-Taker-React) and use command 'node server.js' to spin up the Express server - this will give your app access to the database and the backend.
 2. Navigate to the client folder (Note-Taker-React/client) and use command 'npm start' to spin up the React app.
@@ -9,6 +10,7 @@ In a non-production environment, you will need to spin up the React server (conf
 The React app will use the Express server to interact with the database using a RESTful API.
 
 ------Future functionilty------
+
 The next pieces of functionality to be developed (not necessarily in this order) would be:
 1. Create user log-in functionality, including:
   1.1 User can log in using a username and password
@@ -21,4 +23,5 @@ The next pieces of functionality to be developed (not necessarily in this order)
   2.3 User can delete a 'page'
 
 ------Collaboration------
+
 Feel free to make modifications and send a PR!
